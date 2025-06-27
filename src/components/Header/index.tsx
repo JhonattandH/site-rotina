@@ -17,6 +17,7 @@ interface HeaderProps {
   onDashboard?: () => void;
   onMinhasRotinas?: () => void;
   onNovaRotina?: () => void;
+  onEstatisticas?: () => void;
   visualizacaoAtual?: string;
 }
 
@@ -25,6 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   onDashboard,
   onMinhasRotinas,
   onNovaRotina,
+  onEstatisticas,
   visualizacaoAtual
 }) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -84,6 +86,15 @@ export const Header: React.FC<HeaderProps> = ({
               active={visualizacaoAtual === 'rotinas'}
             >
               Rotinas
+            </NavButton>
+          )}
+          
+          {onEstatisticas && (
+            <NavButton
+              onClick={onEstatisticas}
+              active={visualizacaoAtual === 'estatisticas'}
+            >
+              Estatísticas
             </NavButton>
           )}
           

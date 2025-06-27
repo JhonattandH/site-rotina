@@ -193,7 +193,7 @@ const CustomColorInput = styled.input`
   }
 `;
 
-export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
+const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
   const [dados, setDados] = useState<CriarRotina>({
     nome: '',
     descricao: '',

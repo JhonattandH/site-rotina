@@ -11,6 +11,7 @@ import { Dashboard } from './components/Dashboard';
 import { TarefasDiarias } from './components/TarefasDiarias';
 import { RotinasList } from './components/RotinasList';
 import RotinaForm from './components/RotinaForm';
+import { Estatisticas } from './components/Estatisticas';
 import { Filtros, CriarRotina } from './types';
 
 /**
@@ -19,7 +20,8 @@ import { Filtros, CriarRotina } from './types';
 enum Visualizacao {
   DASHBOARD = 'dashboard',
   ROTINAS = 'rotinas',
-  NOVA_ROTINA = 'nova-rotina'
+  NOVA_ROTINA = 'nova-rotina',
+  ESTATISTICAS = 'estatisticas'
 }
 
 /**
@@ -113,6 +115,13 @@ function App() {
           />
         );
 
+      case Visualizacao.ESTATISTICAS:
+        return (
+          <Estatisticas
+            rotinas={rotinas}
+          />
+        );
+
       default:
         return null;
     }
@@ -127,6 +136,7 @@ function App() {
           titulo="Gerenciador de Rotinas"
           onDashboard={() => mudarVisualizacao(Visualizacao.DASHBOARD)}
           onMinhasRotinas={() => mudarVisualizacao(Visualizacao.ROTINAS)}
+          onEstatisticas={() => mudarVisualizacao(Visualizacao.ESTATISTICAS)}
           visualizacaoAtual={visualizacaoAtual}
         />
 
