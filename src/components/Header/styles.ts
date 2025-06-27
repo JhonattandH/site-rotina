@@ -8,7 +8,7 @@ export const HeaderContainer = styled.header`
   backdrop-filter: blur(10px);
   border-bottom: 1px solid ${theme.colors.border};
   color: ${theme.colors.text};
-  padding: ${theme.spacing.xl} 0;
+  padding: ${theme.spacing.md} 0;
   position: sticky;
   top: 0;
   z-index: 100;

@@ -81,8 +81,6 @@ function App() {
           <>
             <Dashboard
               estatisticas={estatisticas}
-              rotinasRecentes={rotinas.slice(0, 3)}
-              onVerRotinas={() => mudarVisualizacao(Visualizacao.ROTINAS)}
             />
             <TarefasDiarias 
               rotinas={rotinas} 
