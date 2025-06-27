@@ -109,7 +109,7 @@ function App() {
             onRemoverAtividade={removerAtividade}
             onToggleAtividade={toggleAtividade}
             onNovaRotina={() => mudarVisualizacao(Visualizacao.NOVA_ROTINA)}
-            onCriarRotina={handleCriarRotinaModal}
+            onEditarRotina={handleCriarRotinaModal}
           />
         );
 

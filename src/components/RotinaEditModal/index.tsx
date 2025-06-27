@@ -19,9 +19,13 @@ import {
   AtividadeHeader,
   AtividadeActions,
   ModalFooter,
-  ColorPicker,
   TimeInput,
-  ErrorMessage
+  ErrorMessage,
+  DiasSemanaContainer,
+  DiaButton,
+  ColorPalette,
+  ColorSphere,
+  CustomColorInput
 } from './styles';
 
 interface RotinaEditModalProps {
@@ -100,6 +104,12 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
         setErro('Preencha o título de pelo menos uma atividade');
         return;
       }
+    }
+    
+    // Validação: deve ter pelo menos um dia da semana selecionado
+    if (editedRotina.diasSemana.length === 0) {
+      setErro('Selecione pelo menos um dia da semana');
+      return;
     }
     
     setErro('');
@@ -185,6 +195,31 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
     });
   };
 
+  const toggleDiaSemana = (dia: DiaSemana) => {
+    setEditedRotina(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        diasSemana: prev.diasSemana.includes(dia)
+          ? prev.diasSemana.filter(d => d !== dia)
+          : [...prev.diasSemana, dia]
+      };
+    });
+  };
+
+  const getNomeDia = (dia: DiaSemana): string => {
+    const nomes = {
+      [DiaSemana.DOMINGO]: 'Dom',
+      [DiaSemana.SEGUNDA]: 'Seg',
+      [DiaSemana.TERCA]: 'Ter',
+      [DiaSemana.QUARTA]: 'Qua',
+      [DiaSemana.QUINTA]: 'Qui',
+      [DiaSemana.SEXTA]: 'Sex',
+      [DiaSemana.SABADO]: 'Sáb'
+    };
+    return nomes[dia];
+  };
+
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -229,13 +264,39 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
 
               <FormGroup>
                 <Label>Cor</Label>
-                <ColorPicker
-                  type="color"
-                  value={editedRotina.cor}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditedRotina(prev => prev ? { ...prev, cor: e.target.value } : null)
-                  }
-                />
+                <ColorPalette>
+                  {[
+                    '#3b82f6', // Azul
+                    '#10b981', // Verde
+                    '#ef4444', // Vermelho
+                    '#f59e0b', // Laranja
+                    '#6366f1', // Índigo
+                    '#7c3aed', // Violeta
+                    '#e879f9', // Magenta
+                    '#06b6d4', // Ciano
+                    '#84cc16', // Lima
+                    '#f97316', // Laranja escuro
+                    '#ec4899', // Rosa
+                    '#8b5cf6'  // Roxo
+                  ].map((cor) => (
+                    <ColorSphere
+                      key={cor}
+                      type="button"
+                      color={cor}
+                      selected={editedRotina.cor === cor}
+                      onClick={() => setEditedRotina(prev => prev ? { ...prev, cor } : null)}
+                      title={`Cor ${cor}`}
+                    />
+                  ))}
+                  <CustomColorInput
+                    type="color"
+                    value={editedRotina.cor}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setEditedRotina(prev => prev ? { ...prev, cor: e.target.value } : null)
+                    }
+                    title="Cor personalizada"
+                  />
+                </ColorPalette>
               </FormGroup>
             </div>
 
@@ -251,6 +312,30 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
                 />
               </FormGroup>
             )}
+
+            <FormGroup style={{ marginTop: '12px' }}>
+              <Label>Dias da Semana</Label>
+              <DiasSemanaContainer>
+                {[
+                  DiaSemana.DOMINGO,
+                  DiaSemana.SEGUNDA,
+                  DiaSemana.TERCA,
+                  DiaSemana.QUARTA,
+                  DiaSemana.QUINTA,
+                  DiaSemana.SEXTA,
+                  DiaSemana.SABADO
+                ].map(dia => (
+                  <DiaButton
+                    key={dia}
+                    type="button"
+                    selected={editedRotina.diasSemana.includes(dia)}
+                    onClick={() => toggleDiaSemana(dia)}
+                  >
+                    {getNomeDia(dia)}
+                  </DiaButton>
+                ))}
+              </DiasSemanaContainer>
+            </FormGroup>
           </FormSection>
 
           <FormSection>

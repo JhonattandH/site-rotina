@@ -12,36 +12,36 @@ interface Props {
 const FormContainer = styled.form`
   max-width: 600px;
   margin: 0 auto;
-  padding: ${props => props.theme.spacing.lg};
-  background: ${props => props.theme.colors.white};
-  border-radius: ${props => props.theme.borderRadius.lg};
-  box-shadow: ${props => props.theme.shadows.md};
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: ${props => props.theme.spacing.lg};
+  margin-bottom: 1.5rem;
 `;
 
 const Label = styled.label`
   display: block;
   font-weight: 600;
-  color: ${props => props.theme.colors.text.primary};
-  margin-bottom: ${props => props.theme.spacing.sm};
+  color: #374151;
+  margin-bottom: 0.5rem;
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
   min-height: 80px;
-  padding: ${props => props.theme.spacing.sm};
-  border: 1px solid ${props => props.theme.colors.border};
-  border-radius: ${props => props.theme.borderRadius.md};
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   font-size: 1rem;
   resize: vertical;
   
   &:focus {
     outline: none;
-    border-color: ${props => props.theme.colors.primary};
-    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}15;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 `;
 
@@ -53,25 +53,25 @@ const FlexContainer = styled.div<{
 }>`
   display: flex;
   flex-direction: ${props => props.direction || 'row'};
-  gap: ${props => props.gap || props.theme.spacing.md};
+  gap: ${props => props.gap || '1rem'};
   align-items: ${props => props.align || 'stretch'};
   justify-content: ${props => props.justify || 'flex-start'};
 `;
 
 const AtividadeCard = styled.div`
-  padding: ${props => props.theme.spacing.md};
-  border: 1px solid ${props => props.theme.colors.border};
-  border-radius: ${props => props.theme.borderRadius.md};
-  background: ${props => props.theme.colors.background};
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
   display: flex;
   align-items: center;
-  gap: ${props => props.theme.spacing.md};
+  gap: 1rem;
 `;
 
 const ErrorMessage = styled.div`
-  color: ${props => props.theme.colors.error};
+  color: #ef4444;
   font-size: 0.875rem;
-  margin-top: ${props => props.theme.spacing.xs};
+  margin-top: 0.25rem;
 `;
 
 const DiasSemanaContainer = styled.div`
@@ -83,23 +83,106 @@ const DiasSemanaContainer = styled.div`
 
 const DiaButton = styled.button<{ selected: boolean }>`
   padding: 0.75rem 0.5rem;
-  border: 2px solid ${props => props.selected ? props.theme.colors.primary : props.theme.colors.border};
-  background: ${props => props.selected ? props.theme.colors.primary : 'transparent'};
-  color: ${props => props.selected ? 'white' : props.theme.colors.text.primary};
-  border-radius: ${props => props.theme.borderRadius.md};
+  border: 2px solid ${props => props.selected ? '#3b82f6' : '#e5e7eb'};
+  background: ${props => props.selected ? '#3b82f6' : 'transparent'};
+  color: ${props => props.selected ? 'white' : '#374151'};
+  border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    border-color: ${props => props.theme.colors.primary};
-    background: ${props => props.selected ? props.theme.colors.primaryDark : props.theme.colors.background};
+    border-color: #3b82f6;
+    background: ${props => props.selected ? '#1d4ed8' : '#f3f4f6'};
   }
   
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}25;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  }
+`;
+
+const ColorPalette = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 40px);
+  gap: 12px;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+`;
+
+const ColorSphere = styled.button<{ color: string; selected: boolean }>`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid ${props => props.selected ? '#374151' : 'transparent'};
+  background: ${props => props.color};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  
+  &:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: #374151;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: #374151;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  }
+  
+  ${props => props.selected && `
+    &:after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  `}
+`;
+
+const CustomColorInput = styled.input`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #e2e8f0;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  transition: all 0.2s ease;
+  
+  &::-webkit-color-swatch-wrapper {
+    padding: 2px;
+    border-radius: 50%;
+  }
+  
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+  }
+  
+  &:hover {
+    transform: scale(1.15);
+    border-color: #374151;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: #374151;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
   }
 `;
 
@@ -155,6 +238,10 @@ export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
         ? prev.diasSemana.filter(d => d !== dia)
         : [...prev.diasSemana, dia]
     }));
+    
+    if (erros.diasSemana) {
+      setErros(prev => ({ ...prev, diasSemana: undefined }));
+    }
   };
 
   const getNomeDia = (dia: DiaSemana): string => {
@@ -187,7 +274,6 @@ export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
       categoria: Categoria.PESSOAL
     });
     
-    // Limpa erro de atividades se existir
     if (erros.atividades) {
       setErros(prev => ({ ...prev, atividades: undefined }));
     }
@@ -248,14 +334,22 @@ export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
       <FormGroup>
         <Label>Dias da Semana *</Label>
         <DiasSemanaContainer>
-          {Object.values(DiaSemana).filter(dia => typeof dia === 'number').map((dia) => (
+          {[
+            DiaSemana.DOMINGO,
+            DiaSemana.SEGUNDA,
+            DiaSemana.TERCA,
+            DiaSemana.QUARTA,
+            DiaSemana.QUINTA,
+            DiaSemana.SEXTA,
+            DiaSemana.SABADO
+          ].map((dia) => (
             <DiaButton
               key={dia}
               type="button"
-              selected={dados.diasSemana.includes(dia as DiaSemana)}
-              onClick={() => toggleDiaSemana(dia as DiaSemana)}
+              selected={dados.diasSemana.includes(dia)}
+              onClick={() => toggleDiaSemana(dia)}
             >
-              {getNomeDia(dia as DiaSemana)}
+              {getNomeDia(dia)}
             </DiaButton>
           ))}
         </DiasSemanaContainer>
@@ -320,6 +414,39 @@ export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
           </div>
         </div>
         {erros.atividades && <ErrorMessage>{erros.atividades}</ErrorMessage>}
+      </FormGroup>
+
+      <FormGroup>
+        <Label>Cor da Rotina</Label>
+        <ColorPalette>
+          {[
+            '#3b82f6', // Azul
+            '#10b981', // Verde
+            '#ef4444', // Vermelho
+            '#f59e0b', // Laranja
+            '#6366f1', // Índigo
+            '#7c3aed', // Violeta
+            '#e879f9', // Magenta
+            '#06b6d4', // Ciano
+            '#84cc16', // Lima
+            '#f97316', // Laranja escuro
+            '#ec4899', // Rosa
+            '#8b5cf6'  // Roxo
+          ].map(cor => (
+            <ColorSphere
+              key={cor}
+              type="button"
+              color={cor}
+              selected={dados.cor === cor}
+              onClick={() => setDados(prev => ({ ...prev, cor }))}
+            />
+          ))}
+          <CustomColorInput
+            type="color"
+            value={dados.cor}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDados(prev => ({ ...prev, cor: e.target.value }))}
+          />
+        </ColorPalette>
       </FormGroup>
 
       <FlexContainer
