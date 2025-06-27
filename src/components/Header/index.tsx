@@ -4,7 +4,6 @@ import {
     HeaderContent,
     TitleSection,
     Title,
-    Subtitle,
     NavigationSection,
     NavButton
 } from './styles';
@@ -31,7 +30,6 @@ export const Header: React.FC<HeaderProps> = ({
       <HeaderContent>
         <TitleSection>
           <Title>{titulo}</Title>
-          <Subtitle>Organize suas atividades e maximize sua produtividade</Subtitle>
         </TitleSection>
         
         <NavigationSection>
@@ -40,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onDashboard}
               active={visualizacaoAtual === 'dashboard'}
             >
-              📊 Dashboard
+              Dashboard
             </NavButton>
           )}
           
@@ -49,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onMinhasRotinas}
               active={visualizacaoAtual === 'rotinas'}
             >
-              📋 Minhas Rotinas
+              Rotinas
             </NavButton>
           )}
           
@@ -58,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onNovaRotina}
               active={visualizacaoAtual === 'nova-rotina'}
             >
-              ➕ Nova Rotina
+              Nova
             </NavButton>
           )}
         </NavigationSection>

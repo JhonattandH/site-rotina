@@ -1,109 +1,103 @@
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-//Estilização do Header da página
+//Estilização moderna e minimalista do Header
 
 export const HeaderContainer = styled.header`
-  background: linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.primaryDark} 100%);
-  color: ${theme.colors.textLight};
-  padding: ${theme.spacing.lg} 0;
-  box-shadow: ${theme.shadows.lg};
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  }
+  background: #1e3a8a;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: ${theme.spacing.xl} 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all ${theme.transitions.fast} ease;
 `;
 
 export const HeaderContent = styled.div`
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 ${theme.spacing.xs};
+  width: 100%;
+  padding: 0 ${theme.spacing.xl};
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: ${theme.spacing.lg};
 
   @media (max-width: ${theme.breakpoints.md}) {
-    flex-direction: column;
+    padding: 0 ${theme.spacing.lg};
+    flex-direction: row;
     gap: ${theme.spacing.md};
-    text-align: center;
+  }
+
+  @media (max-width: ${theme.breakpoints.sm}) {
+    padding: 0 ${theme.spacing.md};
+    flex-direction: column;
+    gap: ${theme.spacing.sm};
   }
 `;
 
 export const TitleSection = styled.div`
-  flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  @media (max-width: ${theme.breakpoints.md}) {
-    align-items: center;
+  align-items: center;
+  flex: 0 0 auto;
+  
+  @media (max-width: ${theme.breakpoints.sm}) {
+    justify-content: center;
   }
 `;
 
 export const Title = styled.h1`
-  font-size: ${theme.typography.fontSize['3xl']};
+  font-size: ${theme.typography.fontSize['2xl']};
   font-weight: ${theme.typography.fontWeight.bold};
-  margin: 0 0 ${theme.spacing.xs} 0;
+  margin: 0;
+  color: #ffffff;
   display: flex;
   align-items: center;
   gap: ${theme.spacing.sm};
-  
-  &::before {
-    content: "⚡";
-    font-size: ${theme.typography.fontSize['2xl']};
-  }
+  letter-spacing: -0.02em;
 
   @media (max-width: ${theme.breakpoints.md}) {
-    font-size: ${theme.typography.fontSize['2xl']};
-  }
-
-  @media (max-width: ${theme.breakpoints.sm}) {
     font-size: ${theme.typography.fontSize.xl};
   }
-`;
-
-export const Subtitle = styled.p`
-  font-size: ${theme.typography.fontSize.base};
-  opacity: 0.9;
-  margin: 0;
-  font-weight: ${theme.typography.fontWeight.medium};
 
   @media (max-width: ${theme.breakpoints.sm}) {
-    font-size: ${theme.typography.fontSize.sm};
+    font-size: ${theme.typography.fontSize.lg};
   }
 `;
 
 export const NavigationSection = styled.nav`
   display: flex;
-  gap: ${theme.spacing.sm};
+  gap: ${theme.spacing.xs};
   align-items: center;
+  flex: 0 0 auto;
 
   @media (max-width: ${theme.breakpoints.md}) {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   @media (max-width: ${theme.breakpoints.sm}) {
     width: 100%;
-    flex-direction: column;
+    justify-content: center;
     gap: ${theme.spacing.xs};
   }
 `;
 
 export const NavButton = styled.button<{ active?: boolean }>`
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: ${theme.colors.textLight};
+  background: ${props => props.active 
+    ? `linear-gradient(135deg, #ffffff, #f8fafc)`
+    : 'transparent'
+  };
+  border: 1px solid ${props => props.active 
+    ? 'transparent' 
+    : 'rgba(255, 255, 255, 0.3)'
+  };
+  color: ${props => props.active 
+    ? '#1e3a8a'
+    : '#ffffff'
+  };
   padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.lg};
+  border-radius: 6px;
   font-size: ${theme.typography.fontSize.sm};
   font-weight: ${theme.typography.fontWeight.medium};
   cursor: pointer;
@@ -111,13 +105,22 @@ export const NavButton = styled.button<{ active?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.xs};
-  min-width: 120px;
+  min-width: 110px;
   justify-content: center;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: ${props => props.active 
+      ? `linear-gradient(135deg, #ffffff, #f8fafc)`
+      : 'rgba(255, 255, 255, 0.1)'
+    };
+    border-color: ${props => props.active 
+      ? 'transparent' 
+      : 'rgba(255, 255, 255, 0.5)'
+    };
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
   }
 
   &:active {
@@ -125,7 +128,8 @@ export const NavButton = styled.button<{ active?: boolean }>`
   }
 
   @media (max-width: ${theme.breakpoints.sm}) {
-    width: 100%;
     min-width: auto;
+    padding: ${theme.spacing.xs} ${theme.spacing.sm};
+    font-size: ${theme.typography.fontSize.xs};
   }
 `;

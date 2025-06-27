@@ -176,14 +176,14 @@ export const AppContainer = styled.div`
 export const MainContainer = styled.main`
   max-width: 1600px;
   margin: 0 auto;
-  padding: ${theme.spacing.lg} ${theme.spacing.xs};
+  padding: ${theme.spacing.lg} ${theme.spacing.xl};
 
   @media (max-width: ${theme.breakpoints.md}) {
-    padding: ${theme.spacing.md} 8px;
+    padding: ${theme.spacing.md} ${theme.spacing.lg};
   }
   
   @media (max-width: ${theme.breakpoints.sm}) {
-    padding: ${theme.spacing.md} 4px;
+    padding: ${theme.spacing.md} ${theme.spacing.md};
   }
 `;
 

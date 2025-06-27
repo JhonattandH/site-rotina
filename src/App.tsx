@@ -8,6 +8,7 @@ import { theme } from './styles/theme';
 import { useRotinas } from './hooks/useRotinas';
 import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
+import { TarefasDiarias } from './components/TarefasDiarias';
 import { RotinasList } from './components/RotinasList';
 import RotinaForm from './components/RotinaForm';
 import { Filtros, CriarRotina } from './types';
@@ -77,11 +78,15 @@ function App() {
     switch (visualizacaoAtual) {
       case Visualizacao.DASHBOARD:
         return (
-          <Dashboard
-            estatisticas={estatisticas}
-            rotinasRecentes={rotinas.slice(0, 3)}
-            onVerRotinas={() => mudarVisualizacao(Visualizacao.ROTINAS)}
-          />
+          <>
+            <Dashboard
+              estatisticas={estatisticas}
+            />
+            <TarefasDiarias 
+              rotinas={rotinas} 
+              onToggleAtividade={toggleAtividade}
+            />
+          </>
         );
 
       case Visualizacao.ROTINAS:
