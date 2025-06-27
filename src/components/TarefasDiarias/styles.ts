@@ -65,7 +65,7 @@ export const TaskCard = styled.div<{ concluida: boolean; rotinaCor?: string }>`
   background: ${props => props.concluida ? 'rgba(34, 197, 94, 0.03)' : '#ffffff'};
   border: 1px solid ${props => props.concluida ? 'rgba(34, 197, 94, 0.2)' : 'rgba(0, 0, 0, 0.06)'};
   border-radius: 12px;
-  padding: 16px 20px 16px 60px;
+  padding: 16px 20px 16px 70px;
   position: relative;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
@@ -89,7 +89,7 @@ export const TaskCard = styled.div<{ concluida: boolean; rotinaCor?: string }>`
       : 'rgba(30, 58, 138, 0.2)'
     };
     border-left: 4px solid ${props => props.rotinaCor || '#1e3a8a'};
-    padding-left: 57px;
+    padding-left: 67px;
   }
 
   ${props => props.concluida && `
@@ -181,14 +181,6 @@ export const TaskTitle = styled.h3<{ concluida: boolean }>`
   max-width: 200px;
 `;
 
-export const TaskDetails = styled.p<{ concluida: boolean }>`
-  font-size: 13px;
-  color: ${props => props.concluida ? '#9ca3af' : '#6b7280'};
-  margin: 8px 0 0 0;
-  line-height: 1.4;
-  transition: color 0.2s ease;
-`;
-
 export const TaskCategory = styled.span`
   font-size: 12px;
   color: #6b7280;
@@ -264,13 +256,14 @@ export const EmptyState = styled.div`
 
 export const TaskActions = styled.div`
   position: absolute;
-  top: 16px;
+  top: 50%;
   left: 16px;
+  transform: translateY(-50%);
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 24px;
-  height: calc(100% - 32px);
+  flex-direction: row;
+  gap: 4px;
+  width: auto;
+  height: auto;
   justify-content: center;
   align-items: center;
 `;

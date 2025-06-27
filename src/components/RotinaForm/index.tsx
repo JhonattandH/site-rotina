@@ -30,7 +30,14 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
   const [rotina, setRotina] = useState<CriarRotina>({
     nome: '',
     descricao: '',
-    atividades: [],
+    atividades: [{
+      titulo: '',
+      descricao: '',
+      horarioInicio: '08:00',
+      duracao: 30,
+      prioridade: Prioridade.MEDIA,
+      categoria: Categoria.PESSOAL
+    }],
     cor: '#3b82f6'
   });
 
@@ -50,8 +57,9 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
       novosErros.nome = 'Nome da rotina é obrigatório';
     }
 
-    if (rotina.atividades.length === 0) {
-      novosErros.atividades = 'Adicione pelo menos uma atividade';
+    const atividadesComTitulo = rotina.atividades.filter(atividade => atividade.titulo.trim());
+    if (atividadesComTitulo.length === 0) {
+      novosErros.atividades = 'Preencha o título de pelo menos uma atividade';
     }
 
     setErros(novosErros);
@@ -77,10 +85,41 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
   };
 
   const removerAtividade = (index: number) => {
+    // Não permite remover se for a última atividade
+    if (rotina.atividades.length <= 1) {
+      setErros(prev => ({ ...prev, atividades: 'Deve haver pelo menos uma atividade' }));
+      return;
+    }
+    
     setRotina(prev => ({
       ...prev,
       atividades: prev.atividades.filter((_, i) => i !== index)
     }));
+    
+    // Limpa erro se houver
+    setErros(prev => {
+      const novosErros = { ...prev };
+      delete novosErros.atividades;
+      return novosErros;
+    });
+  };
+
+  const editarAtividade = (index: number, campo: keyof CriarAtividade, valor: any) => {
+    setRotina(prev => ({
+      ...prev,
+      atividades: prev.atividades.map((atividade, i) =>
+        i === index ? { ...atividade, [campo]: valor } : atividade
+      )
+    }));
+    
+    // Limpa erro quando usuário começa a preencher título
+    if (campo === 'titulo' && valor.trim() && erros.atividades) {
+      setErros(prev => {
+        const novosErros = { ...prev };
+        delete novosErros.atividades;
+        return novosErros;
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +129,12 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
 
     setSalvando(true);
     try {
-      await onSubmit(rotina);
+      // Remove atividades vazias antes de enviar
+      const rotinaParaEnviar = {
+        ...rotina,
+        atividades: rotina.atividades.filter(atividade => atividade.titulo.trim())
+      };
+      await onSubmit(rotinaParaEnviar);
     } catch (error) {
       console.error('Erro ao criar rotina:', error);
     } finally {
@@ -139,15 +183,65 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
             {rotina.atividades.map((atividade, index) => (
               <AtividadeCard key={index}>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0' }}>{atividade.titulo}</h4>
-                  <div style={{ fontSize: '0.875rem', color: '#3b82f6' }}>
-                    {atividade.horarioInicio} - {atividade.duracao}min • {atividade.categoria} • {atividade.prioridade}
-                  </div>
-                  {atividade.descricao && (
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0.25rem 0 0 0' }}>
-                      {atividade.descricao}
-                    </p>
-                  )}
+                  <FormGroup>
+                    <Label>Título da Atividade {index === 0 ? '*' : ''}</Label>
+                    <Input
+                      type="text"
+                      placeholder="Ex: Meditar, Fazer exercícios..."
+                      value={atividade.titulo}
+                      onChange={(e) => editarAtividade(index, 'titulo', e.target.value)}
+                    />
+                  </FormGroup>
+
+                  <Row>
+                    <FormGroup>
+                      <Label>Categoria</Label>
+                      <Select
+                        value={atividade.categoria}
+                        onChange={(e) => editarAtividade(index, 'categoria', e.target.value as Categoria)}
+                      >
+                        <option value={Categoria.PESSOAL}>Pessoal</option>
+                        <option value={Categoria.TRABALHO}>Trabalho</option>
+                        <option value={Categoria.SAUDE}>Saúde</option>
+                        <option value={Categoria.ESTUDO}>Estudo</option>
+                        <option value={Categoria.LAZER}>Lazer</option>
+                      </Select>
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label>Prioridade</Label>
+                      <Select
+                        value={atividade.prioridade}
+                        onChange={(e) => editarAtividade(index, 'prioridade', e.target.value as Prioridade)}
+                      >
+                        <option value={Prioridade.BAIXA}>Baixa</option>
+                        <option value={Prioridade.MEDIA}>Média</option>
+                        <option value={Prioridade.ALTA}>Alta</option>
+                      </Select>
+                    </FormGroup>
+                  </Row>
+
+                  <Row>
+                    <FormGroup>
+                      <Label>Horário</Label>
+                      <Input
+                        type="time"
+                        value={atividade.horarioInicio}
+                        onChange={(e) => editarAtividade(index, 'horarioInicio', e.target.value)}
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Label>Duração (min)</Label>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="480"
+                        value={atividade.duracao}
+                        onChange={(e) => editarAtividade(index, 'duracao', parseInt(e.target.value) || 1)}
+                      />
+                    </FormGroup>
+                  </Row>
                 </div>
                 <RemoveButton onClick={() => removerAtividade(index)}>
                   ✕
@@ -227,18 +321,6 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
                   />
                 </FormGroup>
               </Row>
-
-              <FormGroup>
-                <Label>Descrição (Opcional)</Label>
-                <Textarea
-                  placeholder="Detalhes sobre como realizar esta atividade..."
-                  value={novaAtividade.descricao || ''}
-                  onChange={(e) => setNovaAtividade(prev => ({ 
-                    ...prev, 
-                    descricao: e.target.value 
-                  }))}
-                />
-              </FormGroup>
 
               <Button
                 type="button"

@@ -127,7 +127,6 @@ function App() {
           titulo="Gerenciador de Rotinas"
           onDashboard={() => mudarVisualizacao(Visualizacao.DASHBOARD)}
           onMinhasRotinas={() => mudarVisualizacao(Visualizacao.ROTINAS)}
-          onNovaRotina={() => mudarVisualizacao(Visualizacao.NOVA_ROTINA)}
           visualizacaoAtual={visualizacaoAtual}
         />
 

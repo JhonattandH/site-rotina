@@ -11,7 +11,7 @@ import { theme } from '../../styles/theme';
  */
 interface ButtonProps {
   children: React.ReactNode;           // Conteúdo do botão
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';  // Variantes visuais
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';  // Variantes visuais
   size?: 'sm' | 'md' | 'lg';          // Tamanhos disponíveis
   disabled?: boolean;                  // Estado desabilitado
   loading?: boolean;                   // Estado de carregamento
@@ -154,6 +154,25 @@ const BaseButton = styled.button<ButtonProps>`
           
           &:active:not(:disabled) {
             background-color: ${theme.colors.gray[200]};
+          }
+        `;
+        
+      case 'danger':
+        return css`
+          background-color: transparent;
+          color: #ef4444;
+          border-color: #ef4444;
+          
+          &:hover:not(:disabled) {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+          }
+          
+          &:active:not(:disabled) {
+            background-color: rgba(239, 68, 68, 0.2);
+            transform: translateY(0);
           }
         `;
         

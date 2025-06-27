@@ -9,7 +9,7 @@ export const FiltrosContainer = styled(Card)`
 
 export const FiltrosGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr auto;
+  grid-template-columns: 1.2fr 0.7fr 0.7fr 0.7fr auto auto auto;
   gap: ${theme.spacing.md};
   align-items: end;
 
@@ -44,6 +44,50 @@ export const RotinasGrid = styled.div`
     grid-template-columns: 1fr;
     gap: ${theme.spacing.md};
   }
+`;
+
+export const RotinasLista = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.md};
+`;
+
+export const RotinaListItem = styled(Card)<{ cor: string }>`
+  border-left: 6px solid ${props => props.cor};
+  display: flex;
+  align-items: center;
+  padding: ${theme.spacing.md};
+  gap: ${theme.spacing.lg};
+  transition: all ${theme.transitions.fast} ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${theme.shadows.md};
+  }
+`;
+
+export const RotinaListInfo = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.lg};
+`;
+
+export const RotinaListContent = styled.div`
+  flex: 1;
+`;
+
+export const RotinaListProgress = styled.div`
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.xs};
+`;
+
+export const RotinaListActions = styled.div`
+  display: flex;
+  gap: ${theme.spacing.sm};
+  align-items: center;
 `;
 
 export const RotinaCard = styled(Card)<{ cor: string }>`

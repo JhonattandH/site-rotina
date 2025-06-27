@@ -60,11 +60,13 @@ const StyledInput = styled.input<{
   /* Layout básico */
   width: 100%;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
+  height: 38px;
+  box-sizing: border-box;
   
   /* Tipografia */
   font-family: ${theme.typography.fontFamily.primary};
   font-size: ${theme.typography.fontSize.base};
-  line-height: ${theme.typography.lineHeight.normal};
+  line-height: 1.2;
   
   /* Aparência */
   background-color: ${theme.colors.background};

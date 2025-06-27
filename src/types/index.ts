@@ -24,6 +24,27 @@ export enum Categoria {
 }
 
 /**
+ * Enum para definir os tipos de ordenação das rotinas
+ * Permite organizar a exibição das rotinas de diferentes formas
+ */
+export enum TipoOrdenacao {
+  NOME = 'nome',
+  DATA_CRIACAO = 'dataCriacao',
+  PROGRESSO = 'progresso',
+  CATEGORIA = 'categoria',
+  TOTAL_ATIVIDADES = 'totalAtividades'
+}
+
+/**
+ * Enum para definir os modos de visualização das rotinas
+ * Permite alternar entre exibição em cards e lista
+ */
+export enum ModoVisualizacao {
+  CARDS = 'cards',
+  LISTA = 'lista'
+}
+
+/**
  * Interface que define a estrutura de uma Atividade
  * Representa uma tarefa individual dentro de uma rotina
  */
@@ -91,6 +112,9 @@ export interface Filtros {
   concluida?: boolean;
   ativa?: boolean;
   texto?: string;                // Busca por texto livre
+  ordenacao?: TipoOrdenacao;     // Tipo de ordenação das rotinas
+  direcaoOrdenacao?: 'asc' | 'desc'; // Direção da ordenação
+  modoVisualizacao?: ModoVisualizacao; // Modo de exibição (cards ou lista)
 }
 
 /**

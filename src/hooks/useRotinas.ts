@@ -2,7 +2,7 @@
 // Centraliza toda a lógica de estado das rotinas
 
 import { useState, useCallback, useMemo } from 'react';
-import { Rotina, Atividade, CriarRotina, CriarAtividade, Filtros, Estatisticas, Prioridade, Categoria } from '../types';
+import { Rotina, Atividade, CriarRotina, CriarAtividade, Filtros, Estatisticas, Prioridade, Categoria, TipoOrdenacao, ModoVisualizacao } from '../types';
 import { useLocalStorage } from './useLocalStorage';
 
 /**
@@ -128,7 +128,11 @@ export function useRotinas() {
   const [rotinas, setRotinas] = useLocalStorage<Rotina[]>('rotinas', rotinasExemplo);
   
   // Estado dos filtros ativos
-  const [filtros, setFiltros] = useState<Filtros>({});
+  const [filtros, setFiltros] = useState<Filtros>({
+    ordenacao: TipoOrdenacao.NOME,
+    direcaoOrdenacao: 'asc',
+    modoVisualizacao: ModoVisualizacao.CARDS
+  });
   
   // Estado da rotina selecionada
   const [rotinaSelecionada, setRotinaSelecionada] = useState<string | null>(null);
@@ -282,10 +286,10 @@ export function useRotinas() {
   }, [setRotinas]);
 
   /**
-   * Rotinas filtradas baseadas nos filtros ativos
+   * Rotinas filtradas e ordenadas baseadas nos filtros ativos
    */
   const rotinasFiltradas = useMemo(() => {
-    return rotinas.filter(rotina => {
+    let rotinasProcessadas = rotinas.filter(rotina => {
       // Filtro por texto (busca no nome e descrição)
       if (filtros.texto) {
         const texto = filtros.texto.toLowerCase();
@@ -327,6 +331,54 @@ export function useRotinas() {
 
       return true;
     });
+
+    // Aplicar ordenação
+    const ordenacao = filtros.ordenacao || TipoOrdenacao.NOME;
+    const direcao = filtros.direcaoOrdenacao || 'asc';
+
+    rotinasProcessadas.sort((a, b) => {
+      let resultado = 0;
+
+      switch (ordenacao) {
+        case TipoOrdenacao.NOME:
+          resultado = a.nome.localeCompare(b.nome);
+          break;
+        
+        case TipoOrdenacao.DATA_CRIACAO:
+          const dataA = a.dataInicio || new Date(0);
+          const dataB = b.dataInicio || new Date(0);
+          resultado = dataA.getTime() - dataB.getTime();
+          break;
+        
+        case TipoOrdenacao.PROGRESSO:
+          const progressoA = a.atividades.length > 0 
+            ? (a.atividades.filter(ativ => ativ.concluida).length / a.atividades.length) * 100 
+            : 0;
+          const progressoB = b.atividades.length > 0 
+            ? (b.atividades.filter(ativ => ativ.concluida).length / b.atividades.length) * 100 
+            : 0;
+          resultado = progressoA - progressoB;
+          break;
+        
+        case TipoOrdenacao.CATEGORIA:
+          // Pega a primeira categoria das atividades para ordenação
+          const catA = a.atividades[0]?.categoria || '';
+          const catB = b.atividades[0]?.categoria || '';
+          resultado = catA.localeCompare(catB);
+          break;
+        
+        case TipoOrdenacao.TOTAL_ATIVIDADES:
+          resultado = a.atividades.length - b.atividades.length;
+          break;
+        
+        default:
+          resultado = 0;
+      }
+
+      return direcao === 'asc' ? resultado : -resultado;
+    });
+
+    return rotinasProcessadas;
   }, [rotinas, filtros]);
 
   /**

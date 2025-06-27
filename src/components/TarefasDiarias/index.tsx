@@ -12,7 +12,6 @@ import {
   TaskDuration,
   TaskActions,
   TaskActionButton,
-  TaskDetails,
   TaskCategory,
   TaskPriority,
   EmptyState,
@@ -84,17 +83,7 @@ export const TarefasDiarias: React.FC<TarefasDiariasProps> = ({
     return `${mins}min`;
   };
 
-  // Função para obter emoji da categoria
-  const getEmojiCategoria = (categoria: string) => {
-    switch (categoria) {
-      case 'trabalho': return '💼';
-      case 'pessoal': return '👤';
-      case 'saude': return '🏃‍♂️';
-      case 'estudo': return '📚';
-      case 'lazer': return '🎮';
-      default: return '📋';
-    }
-  };
+  // Função para obter emoji da categoria removida
 
   const tarefasDoDia = obterTarefasDoDia();
   const tarefasConcluidas = tarefasDoDia.filter(t => t.concluida).length;
@@ -153,7 +142,7 @@ export const TarefasDiarias: React.FC<TarefasDiariasProps> = ({
                       </TaskTitle>
                       <TaskBadges>
                         <TaskCategory>
-                          {getEmojiCategoria(tarefa.categoria)} {tarefa.categoria}
+                          {tarefa.categoria}
                         </TaskCategory>
                         <TaskPriority prioridade={tarefa.prioridade}>
                           {tarefa.prioridade}
@@ -163,12 +152,6 @@ export const TarefasDiarias: React.FC<TarefasDiariasProps> = ({
                     </TaskTitleRow>
                     <TaskTime>{tarefa.horarioInicio} - {calcularHorarioFim(tarefa.horarioInicio, tarefa.duracao)}</TaskTime>
                   </TaskHeader>
-                  
-                  {tarefa.descricao && (
-                    <TaskDetails concluida={tarefa.concluida}>
-                      {tarefa.descricao}
-                    </TaskDetails>
-                  )}
                 </TaskCard>
               ))}
             </TaskList>
@@ -176,7 +159,7 @@ export const TarefasDiarias: React.FC<TarefasDiariasProps> = ({
         </>
       ) : (
         <EmptyState>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎯</div>
+          <div style={{ fontSize: '48px', marginBottom: '16px', fontWeight: 'bold', color: '#6366f1' }}>•</div>
           <div>Nenhuma tarefa agendada para hoje</div>
           <p>Crie rotinas com atividades para organizá-las aqui!</p>
         </EmptyState>

@@ -1,13 +1,20 @@
-import React from 'react';
-import { Rotina, Atividade, Filtros, Categoria } from '../../types';
+import React, { useState } from 'react';
+import { Rotina, Atividade, Filtros, Categoria, TipoOrdenacao, ModoVisualizacao } from '../../types';
 import { Button } from '../UI/Button';
 import { Input } from '../UI/Input';
+import { RotinaEditModal } from '../RotinaEditModal';
 import {
   FiltrosContainer,
   FiltrosGrid,
   Select,
   RotinasGrid,
+  RotinasLista,
   RotinaCard,
+  RotinaListItem,
+  RotinaListInfo,
+  RotinaListContent,
+  RotinaListProgress,
+  RotinaListActions,
   RotinaHeader,
   RotinaTitulo,
   RotinaDescricao,
@@ -36,6 +43,7 @@ interface RotinasListProps {
   onRemoverAtividade: (rotinaId: string, atividadeId: string) => void;
   onToggleAtividade: (rotinaId: string, atividadeId: string) => void;
   onNovaRotina: () => void;
+  onCriarRotina?: (dadosRotina: { nome: string; descricao?: string; atividades: Atividade[]; cor: string }) => void;
 }
 
 export const RotinasList: React.FC<RotinasListProps> = ({
@@ -48,7 +56,8 @@ export const RotinasList: React.FC<RotinasListProps> = ({
   onEditarAtividade,
   onRemoverAtividade,
   onToggleAtividade,
-  onNovaRotina
+  onNovaRotina,
+  onCriarRotina
 }) => {
   const handleFiltroChange = (campo: keyof Filtros, valor: any) => {
     onFiltrar({
@@ -63,12 +72,52 @@ export const RotinasList: React.FC<RotinasListProps> = ({
     return Math.round((concluidas / atividades.length) * 100);
   };
 
+  const [selectedRotina, setSelectedRotina] = useState<Rotina | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+
+  const handleEditarRotina = (rotinaId: string) => {
+    const rotina = rotinas.find(r => r.id === rotinaId);
+    if (rotina) {
+      setSelectedRotina(rotina);
+      setIsCreatingNew(false);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleNovaRotina = () => {
+    setSelectedRotina(null);
+    setIsCreatingNew(true);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedRotina(null);
+    setIsCreatingNew(false);
+  };
+
+  const handleSaveRotina = (rotinaEditada: Rotina) => {
+    if (isCreatingNew && onCriarRotina) {
+      // Para nova rotina, usa a função de criação
+      onCriarRotina({
+        nome: rotinaEditada.nome,
+        descricao: rotinaEditada.descricao,
+        atividades: rotinaEditada.atividades,
+        cor: rotinaEditada.cor
+      });
+    } else {
+      // Para rotina existente, usa a função de edição
+      onEditarRotina(rotinaEditada.id, rotinaEditada);
+    }
+  };
+
   return (
     <div>
       <HeaderSection>
         <h2>Minhas Rotinas</h2>
-        <Button onClick={onNovaRotina}>
-          ➕ Nova Rotina
+        <Button onClick={handleNovaRotina}>
+          Nova Rotina
         </Button>
       </HeaderSection>
 
@@ -111,6 +160,39 @@ export const RotinasList: React.FC<RotinasListProps> = ({
             </Select>
           </div>
 
+          <div>
+            <label>Ordenar por</label>
+            <Select
+              value={filtros.ordenacao || TipoOrdenacao.NOME}
+              onChange={(e) => handleFiltroChange('ordenacao', e.target.value)}
+            >
+              <option value={TipoOrdenacao.NOME}>Nome</option>
+              <option value={TipoOrdenacao.DATA_CRIACAO}>Data de Criação</option>
+              <option value={TipoOrdenacao.PROGRESSO}>Progresso</option>
+              <option value={TipoOrdenacao.CATEGORIA}>Categoria</option>
+              <option value={TipoOrdenacao.TOTAL_ATIVIDADES}>Total de Atividades</option>
+            </Select>
+          </div>
+
+          <Button
+            variant="outline"
+            onClick={() => handleFiltroChange('direcaoOrdenacao', filtros.direcaoOrdenacao === 'asc' ? 'desc' : 'asc')}
+          >
+            {filtros.direcaoOrdenacao === 'asc' ? '↑' : '↓'}
+          </Button>
+
+          <div style={{ minWidth: '100px' }}>
+            <Button
+              variant="outline"
+              onClick={() => handleFiltroChange('modoVisualizacao', 
+                filtros.modoVisualizacao === ModoVisualizacao.LISTA ? ModoVisualizacao.CARDS : ModoVisualizacao.LISTA
+              )}
+              fullWidth
+            >
+              {filtros.modoVisualizacao === ModoVisualizacao.LISTA ? 'Cards' : 'Lista'}
+            </Button>
+          </div>
+
           <Button
             variant="outline"
             onClick={() => onFiltrar({})}
@@ -128,10 +210,49 @@ export const RotinasList: React.FC<RotinasListProps> = ({
               ? 'Tente ajustar os filtros para encontrar suas rotinas.'
               : 'Comece criando sua primeira rotina para organizar suas atividades!'}
           </p>
-          <Button onClick={onNovaRotina}>
+          <Button onClick={handleNovaRotina}>
             Criar Primeira Rotina
           </Button>
         </EmptyState>
+      ) : filtros.modoVisualizacao === ModoVisualizacao.LISTA ? (
+        <RotinasLista>
+          {rotinas.map((rotina) => {
+            const progresso = calcularProgresso(rotina.atividades);
+            const atividadesConcluidas = rotina.atividades.filter(a => a.concluida).length;
+            
+            return (
+              <RotinaListItem key={rotina.id} cor={rotina.cor}>
+                <RotinaListInfo>
+                  <RotinaListContent>
+                    <RotinaTitulo>{rotina.nome}</RotinaTitulo>
+                    {rotina.descricao && (
+                      <RotinaDescricao>{rotina.descricao}</RotinaDescricao>
+                    )}
+                  </RotinaListContent>
+                  
+                  <RotinaListProgress>
+                    <ProgressBar>
+                      <ProgressFill percentage={progresso} cor={rotina.cor} />
+                    </ProgressBar>
+                    <ProgressText>
+                      {atividadesConcluidas} de {rotina.atividades.length} atividades ({progresso}%)
+                    </ProgressText>
+                  </RotinaListProgress>
+                  
+                  <RotinaListActions>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditarRotina(rotina.id)}
+                    >
+                      Editar
+                    </Button>
+                  </RotinaListActions>
+                </RotinaListInfo>
+              </RotinaListItem>
+            );
+          })}
+        </RotinasLista>
       ) : (
         <RotinasGrid>
           {rotinas.map((rotina) => {
@@ -150,9 +271,9 @@ export const RotinasList: React.FC<RotinasListProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onRemoverRotina(rotina.id)}
+                      onClick={() => handleEditarRotina(rotina.id)}
                     >
-                      🗑️
+                      Editar
                     </Button>
                   </RotinaActions>
                 </RotinaHeader>
@@ -193,6 +314,18 @@ export const RotinasList: React.FC<RotinasListProps> = ({
             );
           })}
         </RotinasGrid>
+      )}
+
+      {(selectedRotina || isCreatingNew) && (
+        <RotinaEditModal
+          rotina={selectedRotina}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveRotina}
+          onRemoveAtividade={onRemoverAtividade}
+          onToggleAtividade={onToggleAtividade}
+          isNewRotina={isCreatingNew}
+        />
       )}
     </div>
   );
