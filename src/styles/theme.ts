@@ -7,50 +7,55 @@
  */
 export const theme = {
   colors: {
-    // Cores primárias da aplicação
-    primary: '#6366f1',           // Azul principal
-    primaryLight: '#818cf8',      // Azul claro
-    primaryDark: '#4338ca',       // Azul escuro
+    // Cores primárias da aplicação - Tons de azul escuro
+    primary: '#1e3a8a',           // Azul escuro principal
+    primaryLight: '#3b82f6',      // Azul médio
+    primaryDark: '#1e40af',       // Azul muito escuro
     
-    // Cores secundárias
-    secondary: '#f59e0b',         // Laranja
-    secondaryLight: '#fbbf24',    // Laranja claro
-    secondaryDark: '#d97706',     // Laranja escuro
+    // Cores secundárias - Tons de cinza
+    secondary: '#6b7280',         // Cinza médio
+    secondaryLight: '#9ca3af',    // Cinza claro
+    secondaryDark: '#374151',     // Cinza escuro
     
     // Cores de status
-    success: '#10b981',           // Verde para sucesso
-    warning: '#f59e0b',           // Amarelo para avisos
-    error: '#ef4444',             // Vermelho para erros
-    info: '#3b82f6',              // Azul para informações
+    success: '#059669',           // Verde escuro para sucesso
+    warning: '#d97706',           // Laranja escuro para avisos
+    error: '#dc2626',             // Vermelho escuro para erros
+    info: '#1d4ed8',              // Azul escuro para informações
     
-    // Escalas de cinza
+    // Escalas de cinza escuro
     gray: {
-      50: '#f9fafb',
-      100: '#f3f4f6',
-      200: '#e5e7eb',
-      300: '#d1d5db',
-      400: '#9ca3af',
-      500: '#6b7280',
-      600: '#4b5563',
-      700: '#374151',
-      800: '#1f2937',
-      900: '#111827'
+      50: '#18181b',              // Cinza muito escuro
+      100: '#27272a',             // Cinza escuro
+      200: '#3f3f46',             // Cinza médio escuro
+      300: '#52525b',             // Cinza médio
+      400: '#71717a',             // Cinza claro
+      500: '#a1a1aa',             // Cinza muito claro
+      600: '#d4d4d8',             // Cinza clarinho
+      700: '#e4e4e7',             // Cinza quase branco
+      800: '#f4f4f5',             // Cinza bem claro
+      900: '#fafafa'              // Branco acinzentado
     },
     
-    // Cores de fundo
-    background: '#ffffff',
-    backgroundSecondary: '#f9fafb',
-    backgroundDark: '#1f2937',
+    // Cores de fundo - Tema escuro
+    background: '#0f172a',        // Fundo principal muito escuro
+    backgroundSecondary: '#1e293b', // Fundo secundário escuro
+    backgroundDark: '#0f172a',    // Fundo escuro
+    backgroundCard: '#1e293b',    // Fundo dos cards
+    backgroundHover: '#334155',   // Fundo ao passar o mouse
     
-    // Cores de texto
-    text: '#111827',
-    textSecondary: '#6b7280',
-    textLight: '#ffffff',
+    // Cores de texto - Adaptadas para tema escuro
+    text: '#f8fafc',              // Texto principal claro
+    textSecondary: '#cbd5e1',     // Texto secundário
+    textMuted: '#94a3b8',         // Texto esmaecido
+    textLight: '#ffffff',         // Texto branco
+    textDark: '#1e293b',          // Texto escuro (para fundos claros)
     
-    // Cores das bordas
-    border: '#e5e7eb',
-    borderLight: '#f3f4f6',
-    borderDark: '#d1d5db'
+    // Cores das bordas - Tons escuros
+    border: '#334155',            // Borda principal escura
+    borderLight: '#475569',       // Borda clara
+    borderDark: '#1e293b',        // Borda escura
+    borderSubtle: '#475569'       // Borda sutil
   },
   
   /**
@@ -59,19 +64,20 @@ export const theme = {
    */
   typography: {
     fontFamily: {
-      primary: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      secondary: '"Poppins", sans-serif'
+      primary: '"Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      secondary: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      display: '"Plus Jakarta Sans", sans-serif'
     },
     fontSize: {
       xs: '0.75rem',     // 12px
       sm: '0.875rem',    // 14px
-      base: '1rem',      // 16px
-      lg: '1.125rem',    // 18px
-      xl: '1.25rem',     // 20px
-      '2xl': '1.5rem',   // 24px
-      '3xl': '1.875rem', // 30px
-      '4xl': '2.25rem',  // 36px
-      '5xl': '3rem'      // 48px
+      base: '0.9375rem', // 15px - Ligeiramente menor para elegância
+      lg: '1.0625rem',   // 17px
+      xl: '1.1875rem',   // 19px
+      '2xl': '1.4375rem',// 23px
+      '3xl': '1.75rem',  // 28px
+      '4xl': '2.125rem', // 34px
+      '5xl': '2.75rem'   // 44px
     },
     fontWeight: {
       light: 300,
@@ -82,10 +88,16 @@ export const theme = {
       extrabold: 800
     },
     lineHeight: {
-      tight: 1.25,
-      normal: 1.5,
-      relaxed: 1.625,
+      tight: 1.2,
+      normal: 1.6,      // Aumentado para melhor legibilidade
+      relaxed: 1.75,
       loose: 2
+    },
+    letterSpacing: {
+      tight: '-0.025em',
+      normal: '0',
+      wide: '0.025em',
+      wider: '0.05em'
     }
   },
   

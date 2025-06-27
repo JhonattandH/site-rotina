@@ -35,6 +35,7 @@ const BaseButton = styled.button<ButtonProps>`
   /* Tipografia */
   font-family: ${theme.typography.fontFamily.primary};
   font-weight: ${theme.typography.fontWeight.medium};
+  letter-spacing: 0.01em;
   text-decoration: none;
   white-space: nowrap;
   
@@ -148,7 +149,7 @@ const BaseButton = styled.button<ButtonProps>`
           color: ${theme.colors.textSecondary};
           
           &:hover:not(:disabled) {
-            background-color: ${theme.colors.gray[100]};
+            background-color: ${theme.colors.backgroundHover};
             color: ${theme.colors.text};
           }
           
@@ -160,18 +161,18 @@ const BaseButton = styled.button<ButtonProps>`
       case 'danger':
         return css`
           background-color: transparent;
-          color: #ef4444;
-          border-color: #ef4444;
+          color: ${theme.colors.error};
+          border-color: ${theme.colors.error};
           
           &:hover:not(:disabled) {
-            background-color: rgba(239, 68, 68, 0.1);
+            background-color: rgba(220, 38, 38, 0.1);
             color: #dc2626;
             border-color: #dc2626;
             transform: translateY(-1px);
           }
           
           &:active:not(:disabled) {
-            background-color: rgba(239, 68, 68, 0.2);
+            background-color: rgba(220, 38, 38, 0.2);
             transform: translateY(0);
           }
         `;

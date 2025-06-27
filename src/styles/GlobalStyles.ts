@@ -30,28 +30,94 @@ export const GlobalStyles = createGlobalStyle`
     line-height: ${theme.typography.lineHeight.normal};
     color: ${theme.colors.text};
     background-color: ${theme.colors.background};
+    background-image: 
+      radial-gradient(at 47% 33%, hsl(220, 30%, 8%) 0px, transparent 59%), 
+      radial-gradient(at 82% 65%, hsl(220, 25%, 6%) 0px, transparent 55%);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em; /* Ligeiro ajuste para elegância */
+    font-optical-sizing: auto; /* Otimização da fonte */
+    font-feature-settings: 'kern', 'liga', 'clig', 'calt'; /* Melhor tipografia */
+    min-height: 100vh;
   }
 
   /* Estilos para headings */
   h1, h2, h3, h4, h5, h6 {
+    font-family: ${theme.typography.fontFamily.display};
     font-weight: ${theme.typography.fontWeight.semibold};
     line-height: ${theme.typography.lineHeight.tight};
     margin-bottom: ${theme.spacing.md};
+    color: ${theme.colors.text};
+    letter-spacing: -0.02em; /* Mais elegante para títulos */
   }
 
-  h1 { font-size: ${theme.typography.fontSize['4xl']}; }
-  h2 { font-size: ${theme.typography.fontSize['3xl']}; }
-  h3 { font-size: ${theme.typography.fontSize['2xl']}; }
-  h4 { font-size: ${theme.typography.fontSize.xl}; }
-  h5 { font-size: ${theme.typography.fontSize.lg}; }
-  h6 { font-size: ${theme.typography.fontSize.base}; }
+  h1 { 
+    font-size: ${theme.typography.fontSize['4xl']};
+    font-weight: ${theme.typography.fontWeight.bold};
+  }
+  h2 { 
+    font-size: ${theme.typography.fontSize['3xl']};
+    font-weight: ${theme.typography.fontWeight.semibold};
+  }
+  h3 { 
+    font-size: ${theme.typography.fontSize['2xl']};
+    font-weight: ${theme.typography.fontWeight.semibold};
+  }
+  h4 { 
+    font-size: ${theme.typography.fontSize.xl};
+    font-weight: ${theme.typography.fontWeight.medium};
+  }
+  h5 { 
+    font-size: ${theme.typography.fontSize.lg};
+    font-weight: ${theme.typography.fontWeight.medium};
+  }
+  h6 { 
+    font-size: ${theme.typography.fontSize.base};
+    font-weight: ${theme.typography.fontWeight.medium};
+  }
 
   /* Estilos para parágrafos */
   p {
     margin-bottom: ${theme.spacing.md};
     color: ${theme.colors.textSecondary};
+    line-height: ${theme.typography.lineHeight.relaxed};
+    font-weight: ${theme.typography.fontWeight.normal};
+  }
+
+  /* Texto pequeno e auxiliar */
+  small, .text-small {
+    font-size: ${theme.typography.fontSize.sm};
+    color: ${theme.colors.textMuted};
+    font-weight: ${theme.typography.fontWeight.normal};
+    line-height: ${theme.typography.lineHeight.normal};
+  }
+
+  /* Labels mais elegantes */
+  label {
+    font-family: ${theme.typography.fontFamily.primary};
+    font-size: ${theme.typography.fontSize.sm};
+    font-weight: ${theme.typography.fontWeight.medium};
+    color: ${theme.colors.text};
+    letter-spacing: 0.005em;
+  }
+
+  /* Inputs com tipografia melhorada */
+  input, textarea, select {
+    font-family: ${theme.typography.fontFamily.primary};
+    font-size: ${theme.typography.fontSize.base};
+    font-weight: ${theme.typography.fontWeight.normal};
+    line-height: ${theme.typography.lineHeight.normal};
+    letter-spacing: -0.005em;
+    background-color: ${theme.colors.backgroundSecondary};
+    color: ${theme.colors.text};
+    border: 1px solid ${theme.colors.border};
+  }
+
+  /* Botões com tipografia melhorada */
+  button {
+    font-family: ${theme.typography.fontFamily.primary};
+    font-weight: ${theme.typography.fontWeight.medium};
+    letter-spacing: 0.01em;
   }
 
   /* Estilos para links */
@@ -166,7 +232,10 @@ export const GlobalStyles = createGlobalStyle`
  */
 export const AppContainer = styled.div`
   min-height: 100vh;
-  background-color: ${theme.colors.backgroundSecondary};
+  background-color: ${theme.colors.background};
+  background-image: 
+    radial-gradient(at 47% 33%, hsl(220, 30%, 8%) 0px, transparent 59%), 
+    radial-gradient(at 82% 65%, hsl(220, 25%, 6%) 0px, transparent 55%);
 `;
 
 /**
@@ -225,12 +294,18 @@ export const FlexContainer = styled.div<{
  * Card base para componentes
  */
 export const Card = styled.div`
-  background: ${theme.colors.background};
+  background: ${theme.colors.backgroundCard};
   border-radius: ${theme.borderRadius.lg};
   padding: ${theme.spacing.lg};
-  box-shadow: ${theme.shadows.base};
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   border: 1px solid ${theme.colors.border};
   transition: all ${theme.transitions.fast} ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    border-color: ${theme.colors.borderLight};
+  }
 
   &:hover {
     box-shadow: ${theme.shadows.md};

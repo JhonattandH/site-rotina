@@ -13,9 +13,10 @@ const FormContainer = styled.form`
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
-  background: white;
+  background: ${({ theme }) => theme.colors.backgroundCard};
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const FormGroup = styled.div`
@@ -25,7 +26,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   font-weight: 600;
-  color: #374151;
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 0.5rem;
 `;
 
@@ -33,15 +34,21 @@ const Textarea = styled.textarea`
   width: 100%;
   min-height: 80px;
   padding: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  color: ${({ theme }) => theme.colors.text};
   border-radius: 8px;
   font-size: 1rem;
   resize: vertical;
   
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+  }
+  
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textMuted};
   }
 `;
 
@@ -60,16 +67,16 @@ const FlexContainer = styled.div<{
 
 const AtividadeCard = styled.div`
   padding: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 8px;
-  background: #f9fafb;
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   display: flex;
   align-items: center;
   gap: 1rem;
 `;
 
 const ErrorMessage = styled.div`
-  color: #ef4444;
+  color: ${({ theme }) => theme.colors.error};
   font-size: 0.875rem;
   margin-top: 0.25rem;
 `;
@@ -83,9 +90,9 @@ const DiasSemanaContainer = styled.div`
 
 const DiaButton = styled.button<{ selected: boolean }>`
   padding: 0.75rem 0.5rem;
-  border: 2px solid ${props => props.selected ? '#3b82f6' : '#e5e7eb'};
-  background: ${props => props.selected ? '#3b82f6' : 'transparent'};
-  color: ${props => props.selected ? 'white' : '#374151'};
+  border: 2px solid ${props => props.selected ? props.theme.colors.primary : props.theme.colors.border};
+  background: ${props => props.selected ? props.theme.colors.primary : 'transparent'};
+  color: ${props => props.selected ? props.theme.colors.textLight : props.theme.colors.text};
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -93,13 +100,13 @@ const DiaButton = styled.button<{ selected: boolean }>`
   transition: all 0.2s ease;
   
   &:hover {
-    border-color: #3b82f6;
-    background: ${props => props.selected ? '#1d4ed8' : '#f3f4f6'};
+    border-color: ${({ theme }) => theme.colors.primary};
+    background: ${props => props.selected ? props.theme.colors.primaryDark : props.theme.colors.backgroundHover};
   }
   
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.25);
   }
 `;
 
@@ -111,9 +118,9 @@ const ColorPalette = styled.div`
   align-items: center;
   margin-top: 0.75rem;
   padding: 1rem;
-  background: #f8fafc;
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const ColorSphere = styled.button<{ color: string; selected: boolean }>`
@@ -158,7 +165,7 @@ const CustomColorInput = styled.input`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 3px solid #e2e8f0;
+  border: 3px solid ${({ theme }) => theme.colors.border};
   cursor: pointer;
   padding: 0;
   background: none;
@@ -176,13 +183,13 @@ const CustomColorInput = styled.input`
   
   &:hover {
     transform: scale(1.15);
-    border-color: #374151;
+    border-color: ${({ theme }) => theme.colors.borderLight};
   }
   
   &:focus {
     outline: none;
-    border-color: #374151;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.25);
   }
 `;
 
@@ -375,7 +382,7 @@ export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
                   size="sm"
                   onClick={() => removerAtividade(index)}
                 >
-                  🗑️
+                  Remover
                 </Button>
               </AtividadeCard>
             ))}
@@ -394,7 +401,7 @@ export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
             marginBottom: '0.5rem', 
             display: 'block' 
           }}>
-            ➕ Adicionar Nova Atividade
+            Adicionar Nova Atividade
           </label>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <Input

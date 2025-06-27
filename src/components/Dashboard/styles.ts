@@ -60,11 +60,6 @@ export const SectionTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.sm};
-  
-  &::before {
-    content: "📊";
-    font-size: ${theme.typography.fontSize.lg};
-  }
 `;
 
 export const RotinaRecenteCard = styled(Card)`
@@ -102,11 +97,6 @@ export const RotinaRecenteAtividades = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.xs};
-  
-  &::before {
-    content: "✓";
-    color: ${theme.colors.success};
-  }
 `;
 
 export const EmptyState = styled.div`
@@ -114,11 +104,8 @@ export const EmptyState = styled.div`
   padding: ${theme.spacing.xl} ${theme.spacing.lg};
   color: ${theme.colors.textSecondary};
   
-  &::before {
-    content: "📝";
-    font-size: ${theme.typography.fontSize['3xl']};
-    display: block;
-    margin-bottom: ${theme.spacing.md};
+  h3 {
+    margin-bottom: ${theme.spacing.sm};
   }
 `;
 

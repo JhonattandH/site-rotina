@@ -243,10 +243,5 @@ export const HeaderSection = styled.div`
     display: flex;
     align-items: center;
     gap: ${theme.spacing.sm};
-    
-    &::before {
-      content: "📋";
-      font-size: ${theme.typography.fontSize.lg};
-    }
   }
 `;

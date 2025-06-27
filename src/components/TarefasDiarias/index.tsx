@@ -103,7 +103,7 @@ export const TarefasDiarias: React.FC<TarefasDiariasProps> = ({
 
   return (
     <ChecklistContainer>
-      <SectionTitle>📅 Tarefas de Hoje</SectionTitle>
+      <SectionTitle>Tarefas de Hoje</SectionTitle>
       
       {tarefasDoDia.length > 0 ? (
         <>

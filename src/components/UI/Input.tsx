@@ -132,12 +132,6 @@ const ErrorMessage = styled.span`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.xs};
-  
-  /* Ícone de erro */
-  &::before {
-    content: "⚠";
-    font-size: ${theme.typography.fontSize.xs};
-  }
 `;
 
 /**
@@ -149,12 +143,6 @@ const SuccessMessage = styled.span`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.xs};
-  
-  /* Ícone de sucesso */
-  &::before {
-    content: "✓";
-    font-size: ${theme.typography.fontSize.xs};
-  }
 `;
 
 /**

@@ -65,13 +65,6 @@ function App() {
   };
 
   /**
-   * Handler para criação de nova rotina via modal
-   */
-  const handleCriarRotinaModal = (dadosRotina: CriarRotina) => {
-    criarRotina(dadosRotina);
-  };
-
-  /**
    * Handler para aplicar filtros
    */
   const handleFiltros = (novosFiltros: Filtros) => {
@@ -88,6 +81,8 @@ function App() {
           <>
             <Dashboard
               estatisticas={estatisticas}
+              rotinasRecentes={rotinas.slice(0, 3)}
+              onVerRotinas={() => mudarVisualizacao(Visualizacao.ROTINAS)}
             />
             <TarefasDiarias 
               rotinas={rotinas} 
@@ -109,7 +104,6 @@ function App() {
             onRemoverAtividade={removerAtividade}
             onToggleAtividade={toggleAtividade}
             onNovaRotina={() => mudarVisualizacao(Visualizacao.NOVA_ROTINA)}
-            onEditarRotina={handleCriarRotinaModal}
           />
         );
 
