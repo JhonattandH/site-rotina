@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Rotina, Atividade, Prioridade, Categoria } from '../../types';
+import { Rotina, Atividade, Prioridade, Categoria, DiaSemana } from '../../types';
 import { Button } from '../UI/Button';
 import { Input } from '../UI/Input';
 import {
@@ -73,6 +73,7 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
         descricao: '',
         ativa: true,
         cor: '#3b82f6',
+        diasSemana: [DiaSemana.SEGUNDA, DiaSemana.TERCA, DiaSemana.QUARTA, DiaSemana.QUINTA, DiaSemana.SEXTA],
         atividades: [{
           id: Date.now().toString(),
           titulo: '',

@@ -1,46 +1,117 @@
 import React, { useState } from 'react';
-import { CriarRotina, CriarAtividade, Prioridade, Categoria } from '../../types';
-import {
-  FormContainer,
-  FormTitle,
-  FormGroup,
-  Label,
-  Input,
-  Textarea,
-  Select,
-  AtividadesSection,
-  AtividadeCard,
-  NovaAtividadeForm,
-  Row,
-  Button,
-  ButtonContainer,
-  ErrorMessage,
-  RemoveButton
-} from './styles';
+import styled from 'styled-components';
+import { CriarRotina, CriarAtividade, Prioridade, Categoria, DiaSemana } from '../../types';
+import { Button } from '../UI/Button';
+import { Input } from '../UI/Input';
 
-interface RotinaFormProps {
+interface Props {
   onSubmit: (rotina: CriarRotina) => Promise<void>;
   onCancelar: () => void;
 }
 
-export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) => {
-  const [salvando, setSalvando] = useState(false);
-  const [erros, setErros] = useState<Record<string, string>>({});
+const FormContainer = styled.form`
+  max-width: 600px;
+  margin: 0 auto;
+  padding: ${props => props.theme.spacing.lg};
+  background: ${props => props.theme.colors.white};
+  border-radius: ${props => props.theme.borderRadius.lg};
+  box-shadow: ${props => props.theme.shadows.md};
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: ${props => props.theme.spacing.lg};
+`;
+
+const Label = styled.label`
+  display: block;
+  font-weight: 600;
+  color: ${props => props.theme.colors.text.primary};
+  margin-bottom: ${props => props.theme.spacing.sm};
+`;
+
+const Textarea = styled.textarea`
+  width: 100%;
+  min-height: 80px;
+  padding: ${props => props.theme.spacing.sm};
+  border: 1px solid ${props => props.theme.colors.border};
+  border-radius: ${props => props.theme.borderRadius.md};
+  font-size: 1rem;
+  resize: vertical;
   
-  const [rotina, setRotina] = useState<CriarRotina>({
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.primary};
+    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}15;
+  }
+`;
+
+const FlexContainer = styled.div<{
+  direction?: 'row' | 'column';
+  gap?: string;
+  align?: string;
+  justify?: string;
+}>`
+  display: flex;
+  flex-direction: ${props => props.direction || 'row'};
+  gap: ${props => props.gap || props.theme.spacing.md};
+  align-items: ${props => props.align || 'stretch'};
+  justify-content: ${props => props.justify || 'flex-start'};
+`;
+
+const AtividadeCard = styled.div`
+  padding: ${props => props.theme.spacing.md};
+  border: 1px solid ${props => props.theme.colors.border};
+  border-radius: ${props => props.theme.borderRadius.md};
+  background: ${props => props.theme.colors.background};
+  display: flex;
+  align-items: center;
+  gap: ${props => props.theme.spacing.md};
+`;
+
+const ErrorMessage = styled.div`
+  color: ${props => props.theme.colors.error};
+  font-size: 0.875rem;
+  margin-top: ${props => props.theme.spacing.xs};
+`;
+
+const DiasSemanaContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+`;
+
+const DiaButton = styled.button<{ selected: boolean }>`
+  padding: 0.75rem 0.5rem;
+  border: 2px solid ${props => props.selected ? props.theme.colors.primary : props.theme.colors.border};
+  background: ${props => props.selected ? props.theme.colors.primary : 'transparent'};
+  color: ${props => props.selected ? 'white' : props.theme.colors.text.primary};
+  border-radius: ${props => props.theme.borderRadius.md};
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: ${props => props.theme.colors.primary};
+    background: ${props => props.selected ? props.theme.colors.primaryDark : props.theme.colors.background};
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}25;
+  }
+`;
+
+export const RotinaForm: React.FC<Props> = ({ onSubmit, onCancelar }) => {
+  const [dados, setDados] = useState<CriarRotina>({
     nome: '',
     descricao: '',
-    atividades: [{
-      titulo: '',
-      descricao: '',
-      horarioInicio: '08:00',
-      duracao: 30,
-      prioridade: Prioridade.MEDIA,
-      categoria: Categoria.PESSOAL
-    }],
-    cor: '#3b82f6'
+    atividades: [],
+    cor: '#3b82f6',
+    diasSemana: [DiaSemana.SEGUNDA, DiaSemana.TERCA, DiaSemana.QUARTA, DiaSemana.QUINTA, DiaSemana.SEXTA]
   });
-
+  
   const [novaAtividade, setNovaAtividade] = useState<CriarAtividade>({
     titulo: '',
     descricao: '',
@@ -49,310 +120,229 @@ export const RotinaForm: React.FC<RotinaFormProps> = ({ onSubmit, onCancelar }) 
     prioridade: Prioridade.MEDIA,
     categoria: Categoria.PESSOAL
   });
+  
+  const [erros, setErros] = useState<{
+    nome?: string;
+    atividades?: string;
+    diasSemana?: string;
+  }>({});
+  
+  const [salvando, setSalvando] = useState(false);
 
   const validarFormulario = (): boolean => {
-    const novosErros: Record<string, string> = {};
-
-    if (!rotina.nome.trim()) {
-      novosErros.nome = 'Nome da rotina é obrigatório';
+    const novosErros: typeof erros = {};
+    
+    if (!dados.nome.trim()) {
+      novosErros.nome = 'Nome é obrigatório';
     }
-
-    const atividadesComTitulo = rotina.atividades.filter(atividade => atividade.titulo.trim());
-    if (atividadesComTitulo.length === 0) {
-      novosErros.atividades = 'Preencha o título de pelo menos uma atividade';
+    
+    if (dados.atividades.length === 0) {
+      novosErros.atividades = 'Adicione pelo menos uma atividade';
     }
-
+    
+    if (dados.diasSemana.length === 0) {
+      novosErros.diasSemana = 'Selecione pelo menos um dia da semana';
+    }
+    
     setErros(novosErros);
     return Object.keys(novosErros).length === 0;
   };
 
+  const toggleDiaSemana = (dia: DiaSemana) => {
+    setDados(prev => ({
+      ...prev,
+      diasSemana: prev.diasSemana.includes(dia)
+        ? prev.diasSemana.filter(d => d !== dia)
+        : [...prev.diasSemana, dia]
+    }));
+  };
+
+  const getNomeDia = (dia: DiaSemana): string => {
+    const nomes = {
+      [DiaSemana.DOMINGO]: 'Dom',
+      [DiaSemana.SEGUNDA]: 'Seg',
+      [DiaSemana.TERCA]: 'Ter',
+      [DiaSemana.QUARTA]: 'Qua',
+      [DiaSemana.QUINTA]: 'Qui',
+      [DiaSemana.SEXTA]: 'Sex',
+      [DiaSemana.SABADO]: 'Sáb'
+    };
+    return nomes[dia];
+  };
+
   const adicionarAtividade = () => {
     if (!novaAtividade.titulo.trim()) return;
-
-    setRotina(prev => ({
+    
+    setDados(prev => ({
       ...prev,
       atividades: [...prev.atividades, { ...novaAtividade }]
     }));
-
-    setNovaAtividade({
-      titulo: '',
-      descricao: '',
+    
+    setNovaAtividade({ 
+      titulo: '', 
+      descricao: '', 
       horarioInicio: '08:00',
       duracao: 30,
       prioridade: Prioridade.MEDIA,
       categoria: Categoria.PESSOAL
     });
+    
+    // Limpa erro de atividades se existir
+    if (erros.atividades) {
+      setErros(prev => ({ ...prev, atividades: undefined }));
+    }
   };
 
   const removerAtividade = (index: number) => {
-    // Não permite remover se for a última atividade
-    if (rotina.atividades.length <= 1) {
-      setErros(prev => ({ ...prev, atividades: 'Deve haver pelo menos uma atividade' }));
-      return;
-    }
-    
-    setRotina(prev => ({
+    setDados(prev => ({
       ...prev,
       atividades: prev.atividades.filter((_, i) => i !== index)
     }));
-    
-    // Limpa erro se houver
-    setErros(prev => {
-      const novosErros = { ...prev };
-      delete novosErros.atividades;
-      return novosErros;
-    });
-  };
-
-  const editarAtividade = (index: number, campo: keyof CriarAtividade, valor: any) => {
-    setRotina(prev => ({
-      ...prev,
-      atividades: prev.atividades.map((atividade, i) =>
-        i === index ? { ...atividade, [campo]: valor } : atividade
-      )
-    }));
-    
-    // Limpa erro quando usuário começa a preencher título
-    if (campo === 'titulo' && valor.trim() && erros.atividades) {
-      setErros(prev => {
-        const novosErros = { ...prev };
-        delete novosErros.atividades;
-        return novosErros;
-      });
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validarFormulario()) return;
-
+    
     setSalvando(true);
     try {
-      // Remove atividades vazias antes de enviar
-      const rotinaParaEnviar = {
-        ...rotina,
-        atividades: rotina.atividades.filter(atividade => atividade.titulo.trim())
-      };
-      await onSubmit(rotinaParaEnviar);
+      await onSubmit(dados);
     } catch (error) {
-      console.error('Erro ao criar rotina:', error);
+      console.error('Erro ao salvar rotina:', error);
     } finally {
       setSalvando(false);
     }
   };
 
   return (
-    <FormContainer>
-      <FormTitle>Nova Rotina</FormTitle>
-      
-      <form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label>Nome da Rotina *</Label>
-          <Input
-            type="text"
-            placeholder="Ex: Rotina Matinal, Treino Semanal..."
-            value={rotina.nome}
-            onChange={(e) => setRotina(prev => ({ ...prev, nome: e.target.value }))}
-          />
-          {erros.nome && <ErrorMessage>{erros.nome}</ErrorMessage>}
-        </FormGroup>
+    <FormContainer onSubmit={handleSubmit}>
+      <FormGroup>
+        <Label htmlFor="nome">Nome da Rotina</Label>
+        <Input
+          placeholder="Ex: Rotina Matinal"
+          value={dados.nome}
+          onChange={(valor: string) => {
+            setDados(prev => ({ ...prev, nome: valor }));
+            if (erros.nome) {
+              setErros(prev => ({ ...prev, nome: undefined }));
+            }
+          }}
+          fullWidth
+          error={erros.nome}
+        />
+        {erros.nome && <ErrorMessage>{erros.nome}</ErrorMessage>}
+      </FormGroup>
 
-        <FormGroup>
-          <Label>Descrição</Label>
-          <Textarea
-            placeholder="Descreva o objetivo desta rotina..."
-            value={rotina.descricao || ''}
-            onChange={(e) => setRotina(prev => ({ ...prev, descricao: e.target.value }))}
-          />
-        </FormGroup>
+      <FormGroup>
+        <Label htmlFor="descricao">Descrição (Opcional)</Label>
+        <Textarea
+          placeholder="Descreva sua rotina..."
+          value={dados.descricao}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
+            setDados(prev => ({ ...prev, descricao: e.target.value }))
+          }
+        />
+      </FormGroup>
 
-        <FormGroup>
-          <Label>Cor da Rotina</Label>
-          <Input
-            type="color"
-            value={rotina.cor}
-            onChange={(e) => setRotina(prev => ({ ...prev, cor: e.target.value }))}
-          />
-        </FormGroup>
+      <FormGroup>
+        <Label>Dias da Semana *</Label>
+        <DiasSemanaContainer>
+          {Object.values(DiaSemana).filter(dia => typeof dia === 'number').map((dia) => (
+            <DiaButton
+              key={dia}
+              type="button"
+              selected={dados.diasSemana.includes(dia as DiaSemana)}
+              onClick={() => toggleDiaSemana(dia as DiaSemana)}
+            >
+              {getNomeDia(dia as DiaSemana)}
+            </DiaButton>
+          ))}
+        </DiasSemanaContainer>
+        {erros.diasSemana && <ErrorMessage>{erros.diasSemana}</ErrorMessage>}
+      </FormGroup>
 
-        <FormGroup>
-          <AtividadesSection>
-            <h3>Atividades da Rotina</h3>
-            
-            {rotina.atividades.map((atividade, index) => (
+      <FormGroup>
+        <Label>Atividades</Label>
+        {dados.atividades.length > 0 && (
+          <FlexContainer 
+            direction="column" 
+            gap="0.5rem"
+            style={{ marginBottom: '1rem' }}
+          >
+            {dados.atividades.map((atividade, index) => (
               <AtividadeCard key={index}>
                 <div style={{ flex: 1 }}>
-                  <FormGroup>
-                    <Label>Título da Atividade {index === 0 ? '*' : ''}</Label>
-                    <Input
-                      type="text"
-                      placeholder="Ex: Meditar, Fazer exercícios..."
-                      value={atividade.titulo}
-                      onChange={(e) => editarAtividade(index, 'titulo', e.target.value)}
-                    />
-                  </FormGroup>
-
-                  <Row>
-                    <FormGroup>
-                      <Label>Categoria</Label>
-                      <Select
-                        value={atividade.categoria}
-                        onChange={(e) => editarAtividade(index, 'categoria', e.target.value as Categoria)}
-                      >
-                        <option value={Categoria.PESSOAL}>Pessoal</option>
-                        <option value={Categoria.TRABALHO}>Trabalho</option>
-                        <option value={Categoria.SAUDE}>Saúde</option>
-                        <option value={Categoria.ESTUDO}>Estudo</option>
-                        <option value={Categoria.LAZER}>Lazer</option>
-                      </Select>
-                    </FormGroup>
-
-                    <FormGroup>
-                      <Label>Prioridade</Label>
-                      <Select
-                        value={atividade.prioridade}
-                        onChange={(e) => editarAtividade(index, 'prioridade', e.target.value as Prioridade)}
-                      >
-                        <option value={Prioridade.BAIXA}>Baixa</option>
-                        <option value={Prioridade.MEDIA}>Média</option>
-                        <option value={Prioridade.ALTA}>Alta</option>
-                      </Select>
-                    </FormGroup>
-                  </Row>
-
-                  <Row>
-                    <FormGroup>
-                      <Label>Horário</Label>
-                      <Input
-                        type="time"
-                        value={atividade.horarioInicio}
-                        onChange={(e) => editarAtividade(index, 'horarioInicio', e.target.value)}
-                      />
-                    </FormGroup>
-
-                    <FormGroup>
-                      <Label>Duração (min)</Label>
-                      <Input
-                        type="number"
-                        min="1"
-                        max="480"
-                        value={atividade.duracao}
-                        onChange={(e) => editarAtividade(index, 'duracao', parseInt(e.target.value) || 1)}
-                      />
-                    </FormGroup>
-                  </Row>
+                  <strong>{atividade.titulo}</strong>
                 </div>
-                <RemoveButton onClick={() => removerAtividade(index)}>
-                  ✕
-                </RemoveButton>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removerAtividade(index)}
+                >
+                  🗑️
+                </Button>
               </AtividadeCard>
             ))}
+          </FlexContainer>
+        )}
+        
+        <div style={{
+          padding: '1rem',
+          background: '#f8fafc',
+          borderRadius: '0.5rem',
+          border: '2px dashed #e2e8f0',
+          marginTop: '1rem'
+        }}>
+          <label style={{ 
+            fontWeight: 'bold', 
+            marginBottom: '0.5rem', 
+            display: 'block' 
+          }}>
+            ➕ Adicionar Nova Atividade
+          </label>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <Input
+              placeholder="Nome da atividade (ex: Escovar os dentes)"
+              value={novaAtividade.titulo}
+              onChange={(valor: string) => setNovaAtividade({ ...novaAtividade, titulo: valor })}
+              fullWidth
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={adicionarAtividade}
+              disabled={!novaAtividade.titulo.trim()}
+            >
+              Adicionar
+            </Button>
+          </div>
+        </div>
+        {erros.atividades && <ErrorMessage>{erros.atividades}</ErrorMessage>}
+      </FormGroup>
 
-            <NovaAtividadeForm>
-              <FormGroup>
-                <Label>Título da Atividade *</Label>
-                <Input
-                  type="text"
-                  placeholder="Ex: Meditar, Fazer exercícios..."
-                  value={novaAtividade.titulo}
-                  onChange={(e) => setNovaAtividade(prev => ({ ...prev, titulo: e.target.value }))}
-                />
-              </FormGroup>
-
-              <Row>
-                <FormGroup>
-                  <Label>Categoria</Label>
-                  <Select
-                    value={novaAtividade.categoria}
-                    onChange={(e) => setNovaAtividade(prev => ({ 
-                      ...prev, 
-                      categoria: e.target.value as Categoria 
-                    }))}
-                  >
-                    <option value={Categoria.PESSOAL}>Pessoal</option>
-                    <option value={Categoria.TRABALHO}>Trabalho</option>
-                    <option value={Categoria.SAUDE}>Saúde</option>
-                    <option value={Categoria.ESTUDO}>Estudo</option>
-                    <option value={Categoria.LAZER}>Lazer</option>
-                  </Select>
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Prioridade</Label>
-                  <Select
-                    value={novaAtividade.prioridade}
-                    onChange={(e) => setNovaAtividade(prev => ({ 
-                      ...prev, 
-                      prioridade: e.target.value as Prioridade 
-                    }))}
-                  >
-                    <option value={Prioridade.BAIXA}>Baixa</option>
-                    <option value={Prioridade.MEDIA}>Média</option>
-                    <option value={Prioridade.ALTA}>Alta</option>
-                  </Select>
-                </FormGroup>
-              </Row>
-
-              <Row>
-                <FormGroup>
-                  <Label>Horário de Início</Label>
-                  <Input
-                    type="time"
-                    value={novaAtividade.horarioInicio}
-                    onChange={(e) => setNovaAtividade(prev => ({ 
-                      ...prev, 
-                      horarioInicio: e.target.value 
-                    }))}
-                  />
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Duração (minutos)</Label>
-                  <Input
-                    type="number"
-                    min="1"
-                    max="480"
-                    value={novaAtividade.duracao}
-                    onChange={(e) => setNovaAtividade(prev => ({ 
-                      ...prev, 
-                      duracao: parseInt(e.target.value) || 1 
-                    }))}
-                  />
-                </FormGroup>
-              </Row>
-
-              <Button
-                type="button"
-                variant="outline"
-                onClick={adicionarAtividade}
-                disabled={!novaAtividade.titulo.trim()}
-              >
-                ➕ Adicionar Atividade
-              </Button>
-            </NovaAtividadeForm>
-
-            {erros.atividades && <ErrorMessage>{erros.atividades}</ErrorMessage>}
-          </AtividadesSection>
-        </FormGroup>
-
-        <ButtonContainer>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={onCancelar}
-            disabled={salvando}
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            disabled={salvando}
-          >
-            {salvando ? 'Criando...' : 'Criar Rotina'}
-          </Button>
-        </ButtonContainer>
-      </form>
+      <FlexContainer
+        justify="flex-end"
+        gap="1rem"
+        style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}
+      >
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onCancelar}
+          disabled={salvando}
+        >
+          Cancelar
+        </Button>
+        <Button
+          type="submit"
+          loading={salvando}
+          disabled={salvando}
+        >
+          Criar Rotina
+        </Button>
+      </FlexContainer>
     </FormContainer>
   );
 };

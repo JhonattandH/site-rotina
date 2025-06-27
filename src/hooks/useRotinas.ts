@@ -2,7 +2,7 @@
 // Centraliza toda a lógica de estado das rotinas
 
 import { useState, useCallback, useMemo } from 'react';
-import { Rotina, Atividade, CriarRotina, CriarAtividade, Filtros, Estatisticas, Prioridade, Categoria, TipoOrdenacao, ModoVisualizacao } from '../types';
+import { Rotina, Atividade, CriarRotina, CriarAtividade, Filtros, Estatisticas, Prioridade, Categoria, TipoOrdenacao, ModoVisualizacao, DiaSemana } from '../types';
 import { useLocalStorage } from './useLocalStorage';
 
 /**
@@ -72,7 +72,8 @@ const rotinasExemplo: Rotina[] = [
     ],
     dataInicio: new Date('2024-01-01'),
     cor: '#4ade80',
-    ativa: true
+    ativa: true,
+    diasSemana: [DiaSemana.SEGUNDA, DiaSemana.TERCA, DiaSemana.QUARTA, DiaSemana.QUINTA, DiaSemana.SEXTA, DiaSemana.SABADO, DiaSemana.DOMINGO]
   },
   {
     id: 'exemplo-2',
@@ -115,7 +116,8 @@ const rotinasExemplo: Rotina[] = [
     ],
     dataInicio: new Date('2024-01-01'),
     cor: '#3b82f6',
-    ativa: true
+    ativa: true,
+    diasSemana: [DiaSemana.SEGUNDA, DiaSemana.TERCA, DiaSemana.QUARTA, DiaSemana.QUINTA, DiaSemana.SEXTA]
   }
 ];
 
@@ -170,7 +172,8 @@ export function useRotinas() {
       dataInicio: dadosRotina.dataInicio,
       dataFim: dadosRotina.dataFim,
       cor: dadosRotina.cor,
-      ativa: true
+      ativa: true,
+      diasSemana: dadosRotina.diasSemana
     };
 
     setRotinas(prev => [...prev, novaRotina]);

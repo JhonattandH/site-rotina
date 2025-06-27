@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyles, AppContainer, MainContainer } from './styles/GlobalStyles';
 import { theme } from './styles/theme';
 import { useRotinas } from './hooks/useRotinas';
-import { Header } from './components/Header';
+import { Header } from './components/Header/';
 import { Dashboard } from './components/Dashboard';
 import { TarefasDiarias } from './components/TarefasDiarias';
 import { RotinasList } from './components/RotinasList';
@@ -65,6 +65,13 @@ function App() {
   };
 
   /**
+   * Handler para criação de nova rotina via modal
+   */
+  const handleCriarRotinaModal = (dadosRotina: CriarRotina) => {
+    criarRotina(dadosRotina);
+  };
+
+  /**
    * Handler para aplicar filtros
    */
   const handleFiltros = (novosFiltros: Filtros) => {
@@ -102,6 +109,7 @@ function App() {
             onRemoverAtividade={removerAtividade}
             onToggleAtividade={toggleAtividade}
             onNovaRotina={() => mudarVisualizacao(Visualizacao.NOVA_ROTINA)}
+            onCriarRotina={handleCriarRotinaModal}
           />
         );
 

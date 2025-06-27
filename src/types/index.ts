@@ -45,6 +45,20 @@ export enum ModoVisualizacao {
 }
 
 /**
+ * Enum para definir os dias da semana
+ * Facilita o controle de quando uma rotina deve ser executada
+ */
+export enum DiaSemana {
+  DOMINGO = 0,
+  SEGUNDA = 1,
+  TERCA = 2,
+  QUARTA = 3,
+  QUINTA = 4,
+  SEXTA = 5,
+  SABADO = 6
+}
+
+/**
  * Interface que define a estrutura de uma Atividade
  * Representa uma tarefa individual dentro de uma rotina
  */
@@ -73,6 +87,7 @@ export interface Rotina {
   dataFim?: Date;                // Data de término da rotina
   cor: string;                   // Cor para identificação visual
   ativa: boolean;                // Se a rotina está ativa
+  diasSemana: DiaSemana[];       // Dias da semana em que a rotina se aplica
 }
 
 /**
@@ -100,6 +115,7 @@ export interface CriarRotina {
   dataInicio?: Date;
   dataFim?: Date;
   cor: string;
+  diasSemana: DiaSemana[];       // Dias da semana em que a rotina se aplica
 }
 
 /**
