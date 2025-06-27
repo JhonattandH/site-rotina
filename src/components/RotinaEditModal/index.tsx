@@ -238,7 +238,7 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
           <FormSection>
             <h3>Configurações da Rotina</h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px 80px', gap: '12px', alignItems: 'end' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px', gap: '12px', alignItems: 'start' }}>
               <FormGroup>
                 <Label>Nome da Rotina</Label>
                 <Input
@@ -261,43 +261,6 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
                   <option value="inativa">Inativa</option>
                 </Select>
               </FormGroup>
-
-              <FormGroup>
-                <Label>Cor</Label>
-                <ColorPalette>
-                  {[
-                    '#3b82f6', // Azul
-                    '#10b981', // Verde
-                    '#ef4444', // Vermelho
-                    '#f59e0b', // Laranja
-                    '#6366f1', // Índigo
-                    '#7c3aed', // Violeta
-                    '#e879f9', // Magenta
-                    '#06b6d4', // Ciano
-                    '#84cc16', // Lima
-                    '#f97316', // Laranja escuro
-                    '#ec4899', // Rosa
-                    '#8b5cf6'  // Roxo
-                  ].map((cor) => (
-                    <ColorSphere
-                      key={cor}
-                      type="button"
-                      color={cor}
-                      selected={editedRotina.cor === cor}
-                      onClick={() => setEditedRotina(prev => prev ? { ...prev, cor } : null)}
-                      title={`Cor ${cor}`}
-                    />
-                  ))}
-                  <CustomColorInput
-                    type="color"
-                    value={editedRotina.cor}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setEditedRotina(prev => prev ? { ...prev, cor: e.target.value } : null)
-                    }
-                    title="Cor personalizada"
-                  />
-                </ColorPalette>
-              </FormGroup>
             </div>
 
             {editedRotina.descricao !== undefined && (
@@ -312,6 +275,43 @@ export const RotinaEditModal: React.FC<RotinaEditModalProps> = ({
                 />
               </FormGroup>
             )}
+
+            <FormGroup style={{ marginTop: '12px' }}>
+              <Label>Cor</Label>
+              <ColorPalette>
+                {[
+                  '#3b82f6', // Azul
+                  '#10b981', // Verde
+                  '#ef4444', // Vermelho
+                  '#f59e0b', // Laranja
+                  '#6366f1', // Índigo
+                  '#7c3aed', // Violeta
+                  '#e879f9', // Magenta
+                  '#06b6d4', // Ciano
+                  '#84cc16', // Lima
+                  '#f97316', // Laranja escuro
+                  '#ec4899', // Rosa
+                  '#8b5cf6'  // Roxo
+                ].map((cor) => (
+                  <ColorSphere
+                    key={cor}
+                    type="button"
+                    color={cor}
+                    selected={editedRotina.cor === cor}
+                    onClick={() => setEditedRotina(prev => prev ? { ...prev, cor } : null)}
+                    title={`Cor ${cor}`}
+                  />
+                ))}
+                <CustomColorInput
+                  type="color"
+                  value={editedRotina.cor}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEditedRotina(prev => prev ? { ...prev, cor: e.target.value } : null)
+                  }
+                  title="Cor personalizada"
+                />
+              </ColorPalette>
+            </FormGroup>
 
             <FormGroup style={{ marginTop: '12px' }}>
               <Label>Dias da Semana</Label>

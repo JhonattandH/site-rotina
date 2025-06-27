@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Rotina, Atividade, Filtros, Categoria, TipoOrdenacao, ModoVisualizacao, CriarRotina } from '../../types';
+import { Rotina, Atividade, Filtros, Categoria, TipoOrdenacao, ModoVisualizacao } from '../../types';
 import { Button } from '../UI/Button';
 import { Input } from '../UI/Input';
 import { RotinaEditModal } from '../RotinaEditModal';
@@ -43,7 +43,6 @@ interface RotinasListProps {
   onRemoverAtividade: (rotinaId: string, atividadeId: string) => void;
   onToggleAtividade: (rotinaId: string, atividadeId: string) => void;
   onNovaRotina: () => void;
-  onCriarRotina: (dadosRotina: CriarRotina) => void;
 }
 
 export const RotinasList: React.FC<RotinasListProps> = ({
@@ -56,8 +55,7 @@ export const RotinasList: React.FC<RotinasListProps> = ({
   onEditarAtividade,
   onRemoverAtividade,
   onToggleAtividade,
-  onNovaRotina,
-  onCriarRotina
+  onNovaRotina
 }) => {
   const handleFiltroChange = (campo: keyof Filtros, valor: any) => {
     onFiltrar({
@@ -97,26 +95,10 @@ export const RotinasList: React.FC<RotinasListProps> = ({
     setIsCreatingNew(false);
   };
 
-  const handleSaveRotina = (rotinaEditada: Rotina) => {
+  const handleSaveRotina = async (rotinaEditada: Rotina) => {
     if (isCreatingNew) {
-      // Para nova rotina, usa a função de criação convertendo Rotina para CriarRotina
-      const criarRotinaData: CriarRotina = {
-        nome: rotinaEditada.nome,
-        descricao: rotinaEditada.descricao,
-        atividades: rotinaEditada.atividades.map(atividade => ({
-          titulo: atividade.titulo,
-          descricao: atividade.descricao,
-          horarioInicio: atividade.horarioInicio,
-          duracao: atividade.duracao,
-          prioridade: atividade.prioridade,
-          categoria: atividade.categoria
-        })),
-        cor: rotinaEditada.cor,
-        diasSemana: rotinaEditada.diasSemana,
-        dataInicio: rotinaEditada.dataInicio,
-        dataFim: rotinaEditada.dataFim
-      };
-      onCriarRotina(criarRotinaData);
+      // Para nova rotina, redireciona para a tela de criação
+      onNovaRotina();
     } else {
       // Para rotina existente, usa a função de edição
       onEditarRotina(rotinaEditada.id, rotinaEditada);
